@@ -88,6 +88,16 @@ def test_streamlit_full_lifecycle_exposes_all_three_audit_outcomes() -> None:
     assert any("WOULD_CHANGE_REVIEW_REQUIRED" in item.value for item in app.error)
     assert any("evt-002" in item.value for item in app.warning)
     assert any("evt-012" in item.value for item in app.warning)
+    rendered_markdown = [item.value for item in app.markdown]
+    assert any("`BACKORDER`" in item for item in rendered_markdown)
+    assert any(
+        "Promotion status" in item and "PENDING_HUMAN_REVIEW" in item
+        for item in rendered_markdown
+    )
+    assert any(
+        item.value.endswith("`.runtime/streamlit_audit.db`")
+        for item in app.caption
+    )
     assert [item.label for item in app.download_button] == [
         "Download audit report (Markdown)",
         "Download audit report (JSON)",

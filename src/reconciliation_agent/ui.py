@@ -181,31 +181,8 @@ def _display_stream(
     engine: SimulationEngine | None,
     traces: tuple[DecisionTrace, ...],
 ) -> None:
-    left, right = st.columns([1.15, 0.85])
-    with left:
-        st.subheader("Simulation event stream")
-        st.dataframe(
-            [
-                {
-                    "Status": (
-                        "Processed"
-                        if index <= len(processed_events)
-                        else "Waiting"
-                    ),
-                    "Sequence": event.sequence_number,
-                    "Event ID": event.event_id,
-                    "Time": event.occurred_at.strftime("%H:%M:%S"),
-                    "Type": event.event_type.value,
-                    "Entity": event.entity_id,
-                }
-                for index, event in enumerate(event_batch.events, start=1)
-            ],
-            hide_index=True,
-            width="stretch",
-        )
-
-    with right:
-        st.subheader("Current simulation state")
+    state_tab, stream_tab = st.tabs(["Current simulation state", "Event stream"])
+    with state_tab:
         if engine is None or engine.last_occurred_at is None:
             st.info("Process the initialization event to create warehouse state.")
         else:
@@ -226,6 +203,27 @@ def _display_stream(
             )
             with st.expander("Inspect latest event JSON"):
                 st.json(latest.model_dump(mode="json"))
+
+    with stream_tab:
+        st.dataframe(
+            [
+                {
+                    "Status": (
+                        "Processed"
+                        if index <= len(processed_events)
+                        else "Waiting"
+                    ),
+                    "Sequence": event.sequence_number,
+                    "Event ID": event.event_id,
+                    "Time": event.occurred_at.strftime("%H:%M:%S"),
+                    "Type": event.event_type.value,
+                    "Entity": event.entity_id,
+                }
+                for index, event in enumerate(event_batch.events, start=1)
+            ],
+            hide_index=True,
+            width="stretch",
+        )
 
     st.subheader("Reasoning captured before warehouse truth")
     if not traces:
@@ -361,13 +359,13 @@ def _display_reconciliation(
         _display_finding(finding)
 
     st.subheader("Candidate branch")
-    first, second, third = st.columns(3)
+    first, second = st.columns(2)
     first.metric("Decisions audited", report.decisions_audited)
     second.metric(
         "Human reviews required",
         sum(item.requires_human_review for item in report.findings),
     )
-    third.metric("Promotion status", report.promotion_status.value)
+    st.markdown(f"**Promotion status:** `{report.promotion_status.value}`")
     if any(item.requires_human_review for item in report.findings):
         st.warning(
             "Automatic promotion is blocked until the flagged decision is reviewed."
@@ -391,7 +389,8 @@ def _display_reconciliation(
         mime="application/json",
         width="stretch",
     )
-    st.caption(f"Persistent SQLite audit ledger: `{UI_DATABASE}`")
+    database_display_path = UI_DATABASE.relative_to(REPOSITORY_ROOT).as_posix()
+    st.caption(f"Persistent SQLite audit ledger: `{database_display_path}`")
 
 
 def _display_finding(finding: ReconciliationFinding) -> None:
@@ -407,17 +406,16 @@ def _display_finding(finding: ReconciliationFinding) -> None:
             st.error(f"{finding.verdict.value} · human review required")
 
         corrected = finding.corrected_trace
-        first, second, third, fourth = st.columns(4)
-        first.metric("Original action", finding.original_trace.action.value)
-        second.metric(
-            "Corrected action", corrected.action.value if corrected else "Unknown"
+        corrected_action = corrected.action.value if corrected else "UNKNOWN"
+        corrected_atp = (
+            corrected.decision_available_to_promise if corrected else "UNKNOWN"
         )
-        third.metric(
-            "Original ATP", finding.original_trace.decision_available_to_promise
-        )
-        fourth.metric(
-            "Corrected ATP",
-            corrected.decision_available_to_promise if corrected else "Unknown",
+        st.markdown(
+            "| Decision branch | Action | Available-to-promise |\n"
+            "|---|---|---:|\n"
+            f"| Original | `{finding.original_trace.action.value}` | "
+            f"{finding.original_trace.decision_available_to_promise} CASE |\n"
+            f"| Warehouse-corrected | `{corrected_action}` | {corrected_atp} CASE |"
         )
 
         with st.expander("Original decision-time reasoning"):
