@@ -1,0 +1,39 @@
+{
+  "simulation_id": "sim-demo-001",
+  "decisions": [
+    {
+      "decision_id": "decision-100",
+      "order_id": "order-100",
+      "original_action": "DISPATCH",
+      "corrected_action": "DISPATCH",
+      "original_available_to_promise": 10,
+      "corrected_available_to_promise": 10,
+      "verdict": "CONFIRMED_SOUND",
+      "invalidated_output_event_ids": []
+    },
+    {
+      "decision_id": "decision-200",
+      "order_id": "order-200",
+      "original_action": "DISPATCH",
+      "corrected_action": "DISPATCH",
+      "original_available_to_promise": 7,
+      "corrected_available_to_promise": 5,
+      "verdict": "SOUND_WITH_DATA_GAP",
+      "invalidated_output_event_ids": []
+    },
+    {
+      "decision_id": "decision-300",
+      "order_id": "order-300",
+      "original_action": "DISPATCH",
+      "corrected_action": "BACKORDER",
+      "original_available_to_promise": 5,
+      "corrected_available_to_promise": 1,
+      "verdict": "WOULD_CHANGE_REVIEW_REQUIRED",
+      "invalidated_output_event_ids": ["evt-011"]
+    }
+  ],
+  "original_final_available_to_promise": {"SKU-A": 6, "SKU-B": 3, "SKU-C": 2},
+  "candidate_final_available_to_promise": {"SKU-A": 6, "SKU-B": 1, "SKU-C": 1},
+  "promotion_status": "PENDING_HUMAN_REVIEW"
+}
+

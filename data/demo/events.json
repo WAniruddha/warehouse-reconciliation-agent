@@ -1,0 +1,188 @@
+{
+  "events": [
+    {
+      "event_id": "evt-001",
+      "simulation_id": "sim-demo-001",
+      "event_type": "SIMULATION_INITIALIZED",
+      "sequence_number": 1,
+      "occurred_at": "2026-08-14T09:00:00Z",
+      "received_at": "2026-08-14T09:00:01Z",
+      "entity_id": "warehouse-pune-01",
+      "correlation_id": null,
+      "causation_id": null,
+      "schema_version": 1,
+      "payload": {
+        "warehouse_id": "warehouse-pune-01",
+        "inventory": [
+          {"sku": "SKU-A", "on_hand": 10, "reserved": 0, "quarantined": 0},
+          {"sku": "SKU-B", "on_hand": 8, "reserved": 0, "quarantined": 0},
+          {"sku": "SKU-C", "on_hand": 5, "reserved": 0, "quarantined": 0}
+        ]
+      }
+    },
+    {
+      "event_id": "evt-002",
+      "simulation_id": "sim-demo-001",
+      "event_type": "ORDER_RECEIVED",
+      "sequence_number": 2,
+      "occurred_at": "2026-08-14T09:01:00Z",
+      "received_at": "2026-08-14T09:01:01Z",
+      "entity_id": "order-100",
+      "correlation_id": "order-100",
+      "causation_id": null,
+      "schema_version": 1,
+      "payload": {"order_id": "order-100", "sku": "SKU-A", "quantity": 4}
+    },
+    {
+      "event_id": "evt-003",
+      "simulation_id": "sim-demo-001",
+      "event_type": "FULFILLMENT_DECIDED",
+      "sequence_number": 3,
+      "occurred_at": "2026-08-14T09:01:02Z",
+      "received_at": "2026-08-14T09:01:03Z",
+      "entity_id": "decision-100",
+      "correlation_id": "order-100",
+      "causation_id": "evt-002",
+      "schema_version": 1,
+      "payload": {
+        "decision_id": "decision-100",
+        "order_id": "order-100",
+        "action": "DISPATCH",
+        "policy_version": "fulfilment-policy-v1"
+      }
+    },
+    {
+      "event_id": "evt-004",
+      "simulation_id": "sim-demo-001",
+      "event_type": "SHIPMENT_PLANNED",
+      "sequence_number": 4,
+      "occurred_at": "2026-08-14T09:01:04Z",
+      "received_at": "2026-08-14T09:01:05Z",
+      "entity_id": "shipment-100",
+      "correlation_id": "order-100",
+      "causation_id": "evt-003",
+      "schema_version": 1,
+      "payload": {
+        "shipment_id": "shipment-100",
+        "decision_id": "decision-100",
+        "order_id": "order-100",
+        "sku": "SKU-A",
+        "quantity": 4
+      }
+    },
+    {
+      "event_id": "evt-005",
+      "simulation_id": "sim-demo-001",
+      "event_type": "STOCK_ADJUSTED",
+      "sequence_number": 5,
+      "occurred_at": "2026-08-14T09:02:00Z",
+      "received_at": "2026-08-14T09:02:01Z",
+      "entity_id": "SKU-B",
+      "correlation_id": "adjustment-B-001",
+      "causation_id": null,
+      "schema_version": 1,
+      "payload": {"sku": "SKU-B", "delta_on_hand": -1, "reason": "damaged_unit"}
+    },
+    {
+      "event_id": "evt-006",
+      "simulation_id": "sim-demo-001",
+      "event_type": "ORDER_RECEIVED",
+      "sequence_number": 6,
+      "occurred_at": "2026-08-14T09:03:00Z",
+      "received_at": "2026-08-14T09:03:01Z",
+      "entity_id": "order-200",
+      "correlation_id": "order-200",
+      "causation_id": null,
+      "schema_version": 1,
+      "payload": {"order_id": "order-200", "sku": "SKU-B", "quantity": 4}
+    },
+    {
+      "event_id": "evt-007",
+      "simulation_id": "sim-demo-001",
+      "event_type": "FULFILLMENT_DECIDED",
+      "sequence_number": 7,
+      "occurred_at": "2026-08-14T09:03:02Z",
+      "received_at": "2026-08-14T09:03:03Z",
+      "entity_id": "decision-200",
+      "correlation_id": "order-200",
+      "causation_id": "evt-006",
+      "schema_version": 1,
+      "payload": {
+        "decision_id": "decision-200",
+        "order_id": "order-200",
+        "action": "DISPATCH",
+        "policy_version": "fulfilment-policy-v1"
+      }
+    },
+    {
+      "event_id": "evt-008",
+      "simulation_id": "sim-demo-001",
+      "event_type": "SHIPMENT_PLANNED",
+      "sequence_number": 8,
+      "occurred_at": "2026-08-14T09:03:04Z",
+      "received_at": "2026-08-14T09:03:05Z",
+      "entity_id": "shipment-200",
+      "correlation_id": "order-200",
+      "causation_id": "evt-007",
+      "schema_version": 1,
+      "payload": {
+        "shipment_id": "shipment-200",
+        "decision_id": "decision-200",
+        "order_id": "order-200",
+        "sku": "SKU-B",
+        "quantity": 4
+      }
+    },
+    {
+      "event_id": "evt-009",
+      "simulation_id": "sim-demo-001",
+      "event_type": "ORDER_RECEIVED",
+      "sequence_number": 9,
+      "occurred_at": "2026-08-14T09:04:00Z",
+      "received_at": "2026-08-14T09:04:01Z",
+      "entity_id": "order-300",
+      "correlation_id": "order-300",
+      "causation_id": null,
+      "schema_version": 1,
+      "payload": {"order_id": "order-300", "sku": "SKU-C", "quantity": 3}
+    },
+    {
+      "event_id": "evt-010",
+      "simulation_id": "sim-demo-001",
+      "event_type": "FULFILLMENT_DECIDED",
+      "sequence_number": 10,
+      "occurred_at": "2026-08-14T09:04:02Z",
+      "received_at": "2026-08-14T09:04:03Z",
+      "entity_id": "decision-300",
+      "correlation_id": "order-300",
+      "causation_id": "evt-009",
+      "schema_version": 1,
+      "payload": {
+        "decision_id": "decision-300",
+        "order_id": "order-300",
+        "action": "DISPATCH",
+        "policy_version": "fulfilment-policy-v1"
+      }
+    },
+    {
+      "event_id": "evt-011",
+      "simulation_id": "sim-demo-001",
+      "event_type": "SHIPMENT_PLANNED",
+      "sequence_number": 11,
+      "occurred_at": "2026-08-14T09:04:04Z",
+      "received_at": "2026-08-14T09:04:05Z",
+      "entity_id": "shipment-300",
+      "correlation_id": "order-300",
+      "causation_id": "evt-010",
+      "schema_version": 1,
+      "payload": {
+        "shipment_id": "shipment-300",
+        "decision_id": "decision-300",
+        "order_id": "order-300",
+        "sku": "SKU-C",
+        "quantity": 3
+      }
+    }
+  ]
+}
+
