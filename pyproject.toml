@@ -19,7 +19,7 @@ lec-reconcile = "reconciliation_agent.cli:main"
 app = [
     "fastapi>=0.115,<1",
     "sqlalchemy>=2.0,<3",
-    "streamlit>=1.42,<2",
+    "streamlit>=1.61,<2",
     "uvicorn>=0.34,<1",
 ]
 dev = [

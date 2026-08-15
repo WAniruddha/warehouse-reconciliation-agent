@@ -41,13 +41,15 @@ def reconcile(
     if store is not None:
         for event in events_before_snapshot:
             store.save_event(event)
-        store.save_snapshot(snapshot)
 
     original = SimulationEngine(event_batch.simulation_id, DecisionBranch.ORIGINAL)
     for event in events_before_snapshot:
         trace = original.process(event)
         if trace is not None and store is not None:
             store.save_decision_trace(trace)
+
+    if store is not None:
+        store.save_snapshot(snapshot)
 
     simulation_at_snapshot = SimulationEngine(
         event_batch.simulation_id, DecisionBranch.ORIGINAL

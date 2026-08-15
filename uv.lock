@@ -670,7 +670,7 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6,<8" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9,<1" },
     { name = "sqlalchemy", marker = "extra == 'app'", specifier = ">=2.0,<3" },
-    { name = "streamlit", marker = "extra == 'app'", specifier = ">=1.42,<2" },
+    { name = "streamlit", marker = "extra == 'app'", specifier = ">=1.61,<2" },
     { name = "uvicorn", marker = "extra == 'app'", specifier = ">=0.34,<1" },
 ]
 provides-extras = ["app", "dev"]

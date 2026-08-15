@@ -18,6 +18,9 @@ The core is deterministic and runs locally without an LLM or API key.
 - starts a separate corrected branch from the snapshot and replays post-snapshot facts;
 - re-evaluates all auditable decisions without rewriting historical events;
 - generates deterministic verdicts and explains the reasoning gap;
+- provides a step-through Streamlit interface that keeps warehouse truth hidden until it
+  is deliberately received;
+- persists incoming events and original decision traces before the snapshot is received;
 - writes standalone Markdown and JSON reports for review without rerunning the agent.
 
 ## Quick start
@@ -44,6 +47,27 @@ The command prints the complete audit and creates:
 ```
 
 These runtime files are intentionally ignored by Git.
+
+### Run the visual demonstration
+
+Start the Streamlit interface with:
+
+```bash
+python -m streamlit run app.py
+```
+
+Open the local URL shown in the terminal (normally `http://localhost:8501`). The demo lets
+you:
+
+1. process one event at a time, or process the remaining event stream;
+2. inspect the live inventory and the reasoning captured for each decision;
+3. explicitly receive the delayed warehouse snapshot after the stream finishes;
+4. compare original and corrected facts, actions, evidence and verdicts; and
+5. download the completed audit as Markdown or JSON.
+
+The snapshot contents are not shown before the **Receive warehouse snapshot** action, so
+the interface demonstrates the late-data lifecycle instead of revealing the answer in
+advance.
 
 The same command is available after installation as:
 
@@ -179,12 +203,13 @@ python -m ruff check .
 
 The tests independently check the generated report against the golden outcomes, both
 reasoning branches, SQLite persistence and idempotency, report export, policy boundaries,
-the delayed-delivery failure, and a second case where the warehouse fully confirms the
-expected delivery.
+the delayed-delivery failure, a second case where the warehouse fully confirms the
+expected delivery, and the complete Streamlit click-through lifecycle.
 
 ## Project structure
 
 ```text
+app.py                        Streamlit entry point
 src/reconciliation_agent/
   models.py           Input and golden-outcome contracts
   policy.py           Deterministic fulfilment policy
@@ -194,6 +219,7 @@ src/reconciliation_agent/
   store.py            SQLite audit ledger
   render.py           Terminal and Markdown reports
   cli.py              Command-line entry point
+  ui.py               Step-through visual audit interface
 data/demo/             Events, delayed snapshot and golden expected outcomes
 scripts/               Demo runner and fixture validator
 tests/                 Contract and end-to-end tests
@@ -213,7 +239,7 @@ tests/                 Contract and end-to-end tests
 
 ## What I would add with more time
 
-- FastAPI ingestion endpoints and a Streamlit audit dashboard;
+- FastAPI ingestion endpoints and a persistent multi-simulation reviewer queue;
 - additional malformed, missing-SKU, unit-mismatch, duplicate, out-of-order, and
   pre-snapshot-decision fixtures;
 - transactional event ingestion with optimistic concurrency and idempotency keys;
