@@ -1,14 +1,46 @@
 {
   "snapshot_id": "snapshot-demo-001",
   "simulation_id": "sim-demo-001",
-  "warehouse_id": "warehouse-pune-01",
+  "warehouse_id": "warehouse-london-01",
   "as_of": "2026-08-14T09:00:00Z",
   "received_at": "2026-08-14T09:05:00Z",
   "inventory": [
-    {"sku": "SKU-A", "on_hand": 10, "reserved": 0, "quarantined": 0},
-    {"sku": "SKU-B", "on_hand": 6, "reserved": 0, "quarantined": 0},
-    {"sku": "SKU-C", "on_hand": 1, "reserved": 0, "quarantined": 0}
+    {
+      "sku": "BEV-SPARKLING-750",
+      "on_hand": 10,
+      "reserved": 0,
+      "quarantined": 0,
+      "unit_of_measure": "CASE",
+      "source": "WAREHOUSE_SNAPSHOT"
+    },
+    {
+      "sku": "BEV-TONIC-200",
+      "on_hand": 6,
+      "reserved": 0,
+      "quarantined": 0,
+      "unit_of_measure": "CASE",
+      "source": "WAREHOUSE_SNAPSHOT"
+    },
+    {
+      "sku": "BEV-GINGER-330",
+      "on_hand": 1,
+      "reserved": 0,
+      "quarantined": 0,
+      "unit_of_measure": "CASE",
+      "source": "WAREHOUSE_SNAPSHOT"
+    }
+  ],
+  "inbound_deliveries": [
+    {
+      "delivery_id": "delivery-300",
+      "sku": "BEV-GINGER-330",
+      "expected_quantity": 4,
+      "received_quantity": 0,
+      "unit_of_measure": "CASE",
+      "expected_at": "2026-08-14T08:55:00Z",
+      "status": "DELAYED",
+      "source": "warehouse_management_system"
+    }
   ],
   "schema_version": 1
 }
-

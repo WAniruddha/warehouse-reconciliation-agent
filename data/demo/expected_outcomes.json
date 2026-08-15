@@ -4,36 +4,67 @@
     {
       "decision_id": "decision-100",
       "order_id": "order-100",
+      "sku": "BEV-SPARKLING-750",
+      "order_quantity": 4,
+      "unit_of_measure": "CASE",
       "original_action": "DISPATCH",
       "corrected_action": "DISPATCH",
-      "original_available_to_promise": 10,
+      "original_base_available_to_promise": 10,
+      "original_expected_inbound": 0,
+      "original_decision_available_to_promise": 10,
       "corrected_available_to_promise": 10,
+      "policy_consistent_at_time": true,
+      "assumption_event_ids": [],
+      "invalidated_assumption_event_ids": [],
       "verdict": "CONFIRMED_SOUND",
       "invalidated_output_event_ids": []
     },
     {
       "decision_id": "decision-200",
       "order_id": "order-200",
+      "sku": "BEV-TONIC-200",
+      "order_quantity": 4,
+      "unit_of_measure": "CASE",
       "original_action": "DISPATCH",
       "corrected_action": "DISPATCH",
-      "original_available_to_promise": 7,
+      "original_base_available_to_promise": 7,
+      "original_expected_inbound": 0,
+      "original_decision_available_to_promise": 7,
       "corrected_available_to_promise": 5,
+      "policy_consistent_at_time": true,
+      "assumption_event_ids": [],
+      "invalidated_assumption_event_ids": [],
       "verdict": "SOUND_WITH_DATA_GAP",
       "invalidated_output_event_ids": []
     },
     {
       "decision_id": "decision-300",
       "order_id": "order-300",
+      "sku": "BEV-GINGER-330",
+      "order_quantity": 3,
+      "unit_of_measure": "CASE",
       "original_action": "DISPATCH",
       "corrected_action": "BACKORDER",
-      "original_available_to_promise": 5,
+      "original_base_available_to_promise": 1,
+      "original_expected_inbound": 4,
+      "original_decision_available_to_promise": 5,
       "corrected_available_to_promise": 1,
+      "policy_consistent_at_time": true,
+      "assumption_event_ids": ["evt-002"],
+      "invalidated_assumption_event_ids": ["evt-002"],
       "verdict": "WOULD_CHANGE_REVIEW_REQUIRED",
-      "invalidated_output_event_ids": ["evt-011"]
+      "invalidated_output_event_ids": ["evt-012"]
     }
   ],
-  "original_final_available_to_promise": {"SKU-A": 6, "SKU-B": 3, "SKU-C": 2},
-  "candidate_final_available_to_promise": {"SKU-A": 6, "SKU-B": 1, "SKU-C": 1},
+  "original_final_available_to_promise": {
+    "BEV-SPARKLING-750": 6,
+    "BEV-TONIC-200": 3,
+    "BEV-GINGER-330": 2
+  },
+  "candidate_final_available_to_promise": {
+    "BEV-SPARKLING-750": 6,
+    "BEV-TONIC-200": 1,
+    "BEV-GINGER-330": 1
+  },
   "promotion_status": "PENDING_HUMAN_REVIEW"
 }
-

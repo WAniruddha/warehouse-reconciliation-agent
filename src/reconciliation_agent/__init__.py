@@ -5,8 +5,13 @@ from .models import (
     EventBatch,
     EventType,
     ExpectedOutcomes,
+    InboundDeliveryExpectedEvent,
+    InboundDeliveryStatus,
+    InventorySource,
     ReconciliationVerdict,
     ScenarioBundle,
+    UnitOfMeasure,
+    WarehouseInboundDelivery,
     WarehouseSnapshot,
 )
 
@@ -15,8 +20,12 @@ __all__ = [
     "EventBatch",
     "EventType",
     "ExpectedOutcomes",
+    "InboundDeliveryExpectedEvent",
+    "InboundDeliveryStatus",
+    "InventorySource",
     "ReconciliationVerdict",
     "ScenarioBundle",
+    "UnitOfMeasure",
+    "WarehouseInboundDelivery",
     "WarehouseSnapshot",
 ]
-
