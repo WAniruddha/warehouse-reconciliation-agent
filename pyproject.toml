@@ -12,6 +12,9 @@ dependencies = [
     "pydantic>=2.10,<3",
 ]
 
+[project.scripts]
+lec-reconcile = "reconciliation_agent.cli:main"
+
 [project.optional-dependencies]
 app = [
     "fastapi>=0.115,<1",
@@ -39,4 +42,3 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
-
