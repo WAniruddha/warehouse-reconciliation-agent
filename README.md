@@ -23,6 +23,14 @@ The core is deterministic and runs locally without an LLM or API key.
 - persists incoming events and original decision traces before the snapshot is received;
 - writes standalone Markdown and JSON reports for review without rerunning the agent.
 
+## Architecture
+
+[![Warehouse reconciliation architecture](docs/architecture.svg)](docs/architecture.svg)
+
+The important timing distinction is that the snapshot describes warehouse truth at its
+`as_of` time, but the agent receives it later at `received_at`. The original decision
+history is therefore preserved while a separate corrected branch is replayed.
+
 ## Quick start
 
 Requires Python 3.11 or newer.
@@ -221,6 +229,7 @@ src/reconciliation_agent/
   cli.py              Command-line entry point
   ui.py               Step-through visual audit interface
 data/demo/             Events, delayed snapshot and golden expected outcomes
+docs/architecture.svg  Architecture and delayed-data reconciliation flow
 scripts/               Demo runner and fixture validator
 tests/                 Contract and end-to-end tests
 ```

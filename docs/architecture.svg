@@ -1,0 +1,252 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="2370" viewBox="0 0 1200 2370" role="img" aria-labelledby="title description">
+  <title id="title">Warehouse Reconciliation Agent architecture</title>
+  <desc id="description">A deterministic two-phase workflow. Simulation events are validated, replayed and recorded before delayed warehouse truth arrives. Reconciliation then builds original, snapshot-time and corrected views, compares inventory and decisions, assigns auditable verdicts and creates reports.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" class="arrow-head"/>
+    </marker>
+    <style>
+      text {
+        fill: #0f172a;
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+      }
+
+      .background { fill: #f8fafc; }
+      .title { font-size: 32px; font-weight: 600; }
+      .subtitle { fill: #475569; font-size: 17px; }
+      .section-title { font-size: 23px; font-weight: 600; }
+      .node-title { font-size: 18px; font-weight: 600; }
+      .node-body { fill: #475569; font-size: 15px; }
+      .node-code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 14px; }
+      .verdict-code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 15px; font-weight: 600; }
+      .small { fill: #475569; font-size: 14px; }
+      .time { font-size: 17px; font-weight: 600; }
+      .chip-text { font-size: 14px; font-weight: 600; }
+      .section-line { stroke: #cbd5e1; stroke-width: 1.5; }
+      .connector { fill: none; stroke: #94a3b8; stroke-width: 2; marker-end: url(#arrow); }
+      .branch-line { fill: none; stroke: #94a3b8; stroke-width: 2; }
+      .arrow-head { fill: #94a3b8; }
+      .timeline-line { stroke: #94a3b8; stroke-width: 3; }
+      .timeline-dot { stroke: #f8fafc; stroke-width: 4; }
+      .node { stroke-width: 2; rx: 14; }
+      .live { fill: #eff6ff; stroke: #60a5fa; }
+      .truth { fill: #fff7ed; stroke: #fb923c; }
+      .replay { fill: #f5f3ff; stroke: #a78bfa; }
+      .output { fill: #f0fdf4; stroke: #4ade80; }
+      .review { fill: #fef2f2; stroke: #f87171; }
+      .test { fill: #f0fdfa; stroke: #2dd4bf; }
+      .ledger { fill: #ffffff; stroke: #cbd5e1; }
+      .chip { fill: #e2e8f0; }
+    </style>
+  </defs>
+
+  <rect class="background" x="0" y="0" width="1200" height="2370"/>
+
+  <text class="title" x="600" y="52" text-anchor="middle">Warehouse Reconciliation Agent</text>
+  <text class="subtitle" x="600" y="82" text-anchor="middle">Deterministic architecture for auditing decisions when warehouse truth arrives late</text>
+
+  <rect class="chip" x="275" y="104" width="190" height="34" rx="17"/>
+  <text class="chip-text" x="370" y="126" text-anchor="middle">Deterministic Python</text>
+  <rect class="chip" x="485" y="104" width="210" height="34" rx="17"/>
+  <text class="chip-text" x="590" y="126" text-anchor="middle">No LLM or API key</text>
+  <rect class="chip" x="715" y="104" width="210" height="34" rx="17"/>
+  <text class="chip-text" x="820" y="126" text-anchor="middle">Immutable audit trail</text>
+
+  <line class="timeline-line" x1="105" y1="185" x2="1095" y2="185"/>
+  <circle class="timeline-dot" cx="125" cy="185" r="9" fill="#60a5fa"/>
+  <circle class="timeline-dot" cx="440" cy="185" r="9" fill="#fb923c"/>
+  <circle class="timeline-dot" cx="760" cy="185" r="9" fill="#60a5fa"/>
+  <circle class="timeline-dot" cx="1075" cy="185" r="9" fill="#4ade80"/>
+
+  <text class="time" x="125" y="220" text-anchor="middle">08:45–08:47</text>
+  <text class="small" x="125" y="245" text-anchor="middle">Simulation starts</text>
+  <text class="small" x="125" y="265" text-anchor="middle">Inbound is assumed</text>
+
+  <text class="time" x="440" y="220" text-anchor="middle">09:00</text>
+  <text class="small" x="440" y="245" text-anchor="middle">Warehouse truth exists</text>
+  <text class="small" x="440" y="265" text-anchor="middle">but is not available yet</text>
+
+  <text class="time" x="760" y="220" text-anchor="middle">09:01–09:04</text>
+  <text class="small" x="760" y="245" text-anchor="middle">Three decisions made</text>
+  <text class="small" x="760" y="265" text-anchor="middle">and reasoning recorded</text>
+
+  <text class="time" x="1075" y="220" text-anchor="middle">09:05</text>
+  <text class="small" x="1075" y="245" text-anchor="middle">Snapshot received</text>
+  <text class="small" x="1075" y="265" text-anchor="middle">Reconciliation starts</text>
+
+  <text class="section-title" x="50" y="330">Phase 1 — Live simulation and evidence capture</text>
+  <line class="section-line" x1="50" y1="346" x2="1150" y2="346"/>
+
+  <rect class="node live" x="45" y="380" width="330" height="150"/>
+  <text class="node-title" x="210" y="414" text-anchor="middle">Timestamped event stream</text>
+  <text class="node-code" x="210" y="443" text-anchor="middle">data/demo/events.json</text>
+  <text class="node-body" x="210" y="472" text-anchor="middle">12 events · 6 event types</text>
+  <text class="node-body" x="210" y="497" text-anchor="middle">Demo feeds JSON one event at a time</text>
+
+  <rect class="node live" x="435" y="380" width="330" height="150"/>
+  <text class="node-title" x="600" y="414" text-anchor="middle">Validate the stream</text>
+  <text class="node-code" x="600" y="443" text-anchor="middle">models.py</text>
+  <text class="node-body" x="600" y="472" text-anchor="middle">Sequence · time · IDs · units</text>
+  <text class="node-body" x="600" y="497" text-anchor="middle">Order, decision and shipment links</text>
+
+  <rect class="node live" x="825" y="380" width="330" height="150"/>
+  <text class="node-title" x="990" y="414" text-anchor="middle">Apply events and policy</text>
+  <text class="node-code" x="990" y="443" text-anchor="middle">engine.py + policy.py</text>
+  <text class="node-body" x="990" y="472" text-anchor="middle">Update inventory and orders</text>
+  <text class="node-body" x="990" y="497" text-anchor="middle">Enough stock → DISPATCH</text>
+
+  <path class="connector" d="M 375 455 H 435"/>
+  <path class="connector" d="M 765 455 H 825"/>
+
+  <rect class="node live" x="220" y="590" width="760" height="135"/>
+  <text class="node-title" x="600" y="624" text-anchor="middle">Capture the original DecisionTrace immediately</text>
+  <text class="node-code" x="600" y="653" text-anchor="middle">engine.py::_record_decision() → DecisionTrace in report.py</text>
+  <text class="node-body" x="600" y="682" text-anchor="middle">Facts + assumptions + action + policy result + evidence IDs + written explanation</text>
+
+  <path class="connector" d="M 990 530 V 560 H 600 V 590"/>
+
+  <rect class="node ledger" x="125" y="785" width="950" height="120"/>
+  <text class="node-title" x="255" y="825" text-anchor="middle">Persistent AuditStore</text>
+  <text class="node-code" x="255" y="853" text-anchor="middle">store.py → SQLite</text>
+  <rect class="chip" x="405" y="812" width="100" height="34" rx="17"/>
+  <text class="chip-text" x="455" y="834" text-anchor="middle">events</text>
+  <rect class="chip" x="520" y="812" width="120" height="34" rx="17"/>
+  <text class="chip-text" x="580" y="834" text-anchor="middle">snapshot</text>
+  <rect class="chip" x="655" y="812" width="165" height="34" rx="17"/>
+  <text class="chip-text" x="737.5" y="834" text-anchor="middle">decision traces</text>
+  <rect class="chip" x="835" y="812" width="105" height="34" rx="17"/>
+  <text class="chip-text" x="887.5" y="834" text-anchor="middle">report</text>
+  <rect class="chip" x="955" y="812" width="105" height="34" rx="17"/>
+  <text class="chip-text" x="1007.5" y="834" text-anchor="middle">findings</text>
+  <text class="node-body" x="725" y="873" text-anchor="middle">Exact reruns are safe; existing identities cannot be silently rewritten.</text>
+
+  <path class="connector" d="M 600 725 V 785"/>
+
+  <text class="section-title" x="50" y="985">Phase 2 — Delayed warehouse truth and reconciliation</text>
+  <line class="section-line" x1="50" y1="1001" x2="1150" y2="1001"/>
+
+  <rect class="node truth" x="45" y="1035" width="330" height="155"/>
+  <text class="node-title" x="210" y="1069" text-anchor="middle">Delayed snapshot arrives</text>
+  <text class="node-code" x="210" y="1098" text-anchor="middle">warehouse_snapshot.json</text>
+  <text class="node-body" x="210" y="1127" text-anchor="middle">Truth as_of 09:00</text>
+  <text class="node-body" x="210" y="1152" text-anchor="middle">Received at 09:05</text>
+
+  <rect class="node truth" x="435" y="1035" width="330" height="155"/>
+  <text class="node-title" x="600" y="1069" text-anchor="middle">Validate the scenario</text>
+  <text class="node-code" x="600" y="1098" text-anchor="middle">ScenarioBundle · models.py</text>
+  <text class="node-body" x="600" y="1127" text-anchor="middle">Same simulation and warehouse</text>
+  <text class="node-body" x="600" y="1152" text-anchor="middle">Valid snapshot and arrival timing</text>
+
+  <rect class="node truth" x="825" y="1035" width="330" height="155"/>
+  <text class="node-title" x="990" y="1069" text-anchor="middle">Coordinate the audit</text>
+  <text class="node-code" x="990" y="1098" text-anchor="middle">reconcile() · reconciliation.py</text>
+  <text class="node-body" x="990" y="1127" text-anchor="middle">Uses events received before 09:05</text>
+  <text class="node-body" x="990" y="1152" text-anchor="middle">Preserves original history</text>
+
+  <path class="connector" d="M 375 1112 H 435"/>
+  <path class="connector" d="M 765 1112 H 825"/>
+
+  <text class="small" x="600" y="1240" text-anchor="middle">reconcile() creates three isolated views</text>
+  <path class="branch-line" d="M 990 1190 V 1260 H 210"/>
+  <path class="branch-line" d="M 210 1260 H 990"/>
+  <path class="connector" d="M 210 1260 V 1290"/>
+  <path class="connector" d="M 600 1260 V 1290"/>
+  <path class="connector" d="M 990 1260 V 1290"/>
+
+  <rect class="node replay" x="45" y="1290" width="330" height="170"/>
+  <text class="node-title" x="210" y="1324" text-anchor="middle">A. Original history</text>
+  <text class="node-body" x="210" y="1356" text-anchor="middle">Replay all events available</text>
+  <text class="node-body" x="210" y="1381" text-anchor="middle">before snapshot receipt</text>
+  <text class="node-body" x="210" y="1420" text-anchor="middle">What actually happened?</text>
+
+  <rect class="node replay" x="435" y="1290" width="330" height="170"/>
+  <text class="node-title" x="600" y="1324" text-anchor="middle">B. Simulation at 09:00</text>
+  <text class="node-body" x="600" y="1356" text-anchor="middle">Replay events occurring on or</text>
+  <text class="node-body" x="600" y="1381" text-anchor="middle">before snapshot as_of</text>
+  <text class="node-body" x="600" y="1420" text-anchor="middle">What did the model believe then?</text>
+
+  <rect class="node replay" x="825" y="1290" width="330" height="170"/>
+  <text class="node-title" x="990" y="1324" text-anchor="middle">C. Corrected branch</text>
+  <text class="node-body" x="990" y="1356" text-anchor="middle">Start from warehouse truth</text>
+  <text class="node-body" x="990" y="1381" text-anchor="middle">Replay events after snapshot as_of</text>
+  <text class="node-body" x="990" y="1420" text-anchor="middle">What should the model decide now?</text>
+
+  <rect class="node live" x="125" y="1535" width="430" height="110"/>
+  <text class="node-title" x="340" y="1571" text-anchor="middle">Inventory comparison</text>
+  <text class="node-body" x="340" y="1603" text-anchor="middle">View B versus warehouse truth at 09:00</text>
+
+  <rect class="node live" x="645" y="1535" width="430" height="110"/>
+  <text class="node-title" x="860" y="1571" text-anchor="middle">Decision audit</text>
+  <text class="node-body" x="860" y="1603" text-anchor="middle">Original trace A versus corrected trace C</text>
+
+  <path class="connector" d="M 600 1460 V 1495 H 340 V 1535"/>
+  <path class="branch-line" d="M 210 1460 V 1495 H 860"/>
+  <path class="connector" d="M 990 1460 V 1495 H 860 V 1535"/>
+
+  <rect class="node replay" x="350" y="1700" width="500" height="95"/>
+  <text class="node-title" x="600" y="1736" text-anchor="middle">Apply deterministic verdict rules</text>
+  <text class="node-code" x="600" y="1766" text-anchor="middle">reconciliation.py::_audit_decision()</text>
+
+  <path class="branch-line" d="M 340 1645 V 1670 H 600"/>
+  <path class="connector" d="M 860 1645 V 1670 H 600 V 1700"/>
+
+  <path class="branch-line" d="M 600 1795 V 1830 H 210"/>
+  <path class="branch-line" d="M 210 1830 H 990"/>
+  <path class="connector" d="M 210 1830 V 1860"/>
+  <path class="connector" d="M 600 1830 V 1860"/>
+  <path class="connector" d="M 990 1830 V 1860"/>
+
+  <rect class="node output" x="45" y="1860" width="330" height="125"/>
+  <text class="verdict-code" x="210" y="1897" text-anchor="middle">CONFIRMED_SOUND</text>
+  <text class="node-body" x="210" y="1930" text-anchor="middle">Facts and action confirmed</text>
+  <text class="node-body" x="210" y="1955" text-anchor="middle">Accept</text>
+
+  <rect class="node output" x="435" y="1860" width="330" height="125"/>
+  <text class="verdict-code" x="600" y="1897" text-anchor="middle">SOUND_WITH_DATA_GAP</text>
+  <text class="node-body" x="600" y="1930" text-anchor="middle">Facts change; action stays correct</text>
+  <text class="node-body" x="600" y="1955" text-anchor="middle">Accept with documented gap</text>
+
+  <rect class="node review" x="825" y="1860" width="330" height="125"/>
+  <text class="verdict-code" x="990" y="1897" text-anchor="middle">WOULD_CHANGE_REVIEW_REQUIRED</text>
+  <text class="node-body" x="990" y="1939" text-anchor="middle">Corrected action is different</text>
+
+  <text class="small" x="600" y="2025" text-anchor="middle">Missing corrected evidence or a policy-inconsistent recorded action also requires human review.</text>
+
+  <rect class="node output" x="220" y="2065" width="760" height="125"/>
+  <text class="node-title" x="600" y="2100" text-anchor="middle">Build the self-contained ReconciliationReport</text>
+  <text class="node-code" x="600" y="2128" text-anchor="middle">report.py + render.py</text>
+  <text class="node-body" x="600" y="2156" text-anchor="middle">Original reason + corrected result + reasoning gap + invalidated assumptions and outputs</text>
+  <text class="node-body" x="600" y="2179" text-anchor="middle">AUTO_PROMOTE or PENDING_HUMAN_REVIEW</text>
+
+  <path class="connector" d="M 600 1985 V 2065"/>
+
+  <rect class="node output" x="45" y="2240" width="220" height="85"/>
+  <text class="node-title" x="155" y="2275" text-anchor="middle">Streamlit</text>
+  <text class="node-code" x="155" y="2302" text-anchor="middle">ui.py</text>
+
+  <rect class="node output" x="290" y="2240" width="220" height="85"/>
+  <text class="node-title" x="400" y="2275" text-anchor="middle">Command line</text>
+  <text class="node-code" x="400" y="2302" text-anchor="middle">cli.py</text>
+
+  <rect class="node output" x="535" y="2240" width="220" height="85"/>
+  <text class="node-title" x="645" y="2275" text-anchor="middle">Markdown</text>
+  <text class="node-body" x="645" y="2302" text-anchor="middle">Human-readable audit</text>
+
+  <rect class="node output" x="780" y="2240" width="220" height="85"/>
+  <text class="node-title" x="890" y="2275" text-anchor="middle">JSON + SQLite</text>
+  <text class="node-body" x="890" y="2302" text-anchor="middle">Machine-readable evidence</text>
+
+  <rect class="node test" x="1025" y="2240" width="130" height="85"/>
+  <text class="node-title" x="1090" y="2272" text-anchor="middle">Tests</text>
+  <text class="node-code" x="1090" y="2297" text-anchor="middle">pytest</text>
+  <text class="small" x="1090" y="2318" text-anchor="middle">golden oracle</text>
+
+  <path class="connector" d="M 600 2190 V 2215 H 155 V 2240"/>
+  <path class="connector" d="M 600 2190 V 2215 H 400 V 2240"/>
+  <path class="connector" d="M 600 2190 V 2215 H 645 V 2240"/>
+  <path class="connector" d="M 600 2190 V 2215 H 890 V 2240"/>
+  <text class="small" x="1090" y="2225" text-anchor="middle">Independent check</text>
+
+  <text class="small" x="600" y="2353" text-anchor="middle">Tests use data/demo/expected_outcomes.json; the runtime reconciliation code never reads the expected answers.</text>
+</svg>
