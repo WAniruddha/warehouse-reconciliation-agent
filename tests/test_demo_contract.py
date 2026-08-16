@@ -43,6 +43,20 @@ def test_demo_fixtures_satisfy_assessment_contract() -> None:
     assert count_events_received_before(events, snapshot.received_at) == 12
 
 
+def test_runtime_contract_is_not_coupled_to_demo_size_requirements() -> None:
+    events = EventBatch.model_validate(load_json("events.json"))
+    snapshot = WarehouseSnapshot.model_validate(load_json("warehouse_snapshot.json"))
+    two_event_batch = EventBatch(events=events.events[:2])
+
+    bundle = ScenarioBundle(
+        event_batch=two_event_batch,
+        warehouse_snapshot=snapshot,
+    )
+
+    assert len(bundle.event_batch.events) == 2
+    assert len({event.event_type for event in bundle.event_batch.events}) == 2
+
+
 def test_demo_contains_state_decision_and_output_events() -> None:
     events = EventBatch.model_validate(load_json("events.json"))
     event_types = {event.event_type for event in events.events}

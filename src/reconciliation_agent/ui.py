@@ -410,12 +410,13 @@ def _display_finding(finding: ReconciliationFinding) -> None:
         corrected_atp = (
             corrected.decision_available_to_promise if corrected else "UNKNOWN"
         )
+        unit = finding.original_trace.unit_of_measure.value
         st.markdown(
             "| Decision branch | Action | Available-to-promise |\n"
             "|---|---|---:|\n"
             f"| Original | `{finding.original_trace.action.value}` | "
-            f"{finding.original_trace.decision_available_to_promise} CASE |\n"
-            f"| Warehouse-corrected | `{corrected_action}` | {corrected_atp} CASE |"
+            f"{finding.original_trace.decision_available_to_promise} {unit} |\n"
+            f"| Warehouse-corrected | `{corrected_action}` | {corrected_atp} {unit} |"
         )
 
         with st.expander("Original decision-time reasoning"):

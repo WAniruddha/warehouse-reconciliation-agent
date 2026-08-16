@@ -448,11 +448,6 @@ class ScenarioBundle(StrictModel):
         if processed_before_arrival < 2:
             raise ValueError("Snapshot must arrive after at least two simulation events")
 
-        if len(batch.events) < 5:
-            raise ValueError("The demonstration must contain at least five events")
-        if len({event.event_type for event in batch.events}) < 3:
-            raise ValueError("The demonstration must contain at least three event types")
-
         return self
 
 

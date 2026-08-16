@@ -225,17 +225,37 @@ scripts/               Demo runner and fixture validator
 tests/                 Contract and end-to-end tests
 ```
 
-## Design decisions
+## Design choices I made
 
-- **Deterministic core:** inventory arithmetic and verdicts are testable and reproducible.
-- **Immutable history:** reconciliation never edits recorded decisions or output events.
-- **Separate corrected branch:** warehouse truth seeds a candidate state, avoiding accidental
-  corruption of the live simulation record.
-- **Explicit assumptions:** scheduled inbound stock is never disguised as confirmed stock.
-- **Human-review boundary:** changed, unresolved, or internally inconsistent decisions are
-  not automatically promoted.
-- **No required LLM:** an LLM may improve wording later, but cannot decide inventory or the
-  audit verdict.
+- **Keep the decision path deterministic.** Inventory arithmetic, policy evaluation and
+  verdict selection are ordinary Python rules. Given the same inputs, the audit should
+  always reach the same result. An LLM could improve the wording later, but I would not use
+  one to decide whether stock can be dispatched.
+- **Preserve what actually happened.** The warehouse snapshot does not rewrite the original
+  event history. It starts a separate candidate branch so a reviewer can compare the
+  recorded decision with the corrected decision.
+- **Separate evidence from assumptions.** A scheduled delivery may affect projected stock,
+  but its event ID remains attached to the decision as an assumption. That makes it possible
+  to identify exactly what the later warehouse evidence confirmed or invalidated.
+- **Stop at the human-review boundary.** A changed or indeterminate action blocks automatic
+  promotion. The agent explains the gap and preserves affected outputs, but it does not
+  pretend to resolve an operational consequence on its own.
+- **Use simple local persistence.** SQLite is enough for this assessment and makes the audit
+  inspectable after the run without adding an external service.
+
+## Scope and limitations
+
+- The demonstration reads one ordered JSON event stream and one delayed snapshot. The
+  Streamlit buttons simulate arrival; there is no message broker or ingestion API.
+- The warehouse snapshot is treated as authoritative at its `as_of` time. Reconciliation
+  assumes later events are complete and safe to replay in their supplied order.
+- The implementation handles one simulation, one warehouse and one policy version per run.
+  It does not coordinate concurrent writers or reorder late events.
+- Quantities use discrete units and must already match. Unit conversion and partial
+  fulfilment are outside the current scope.
+- Human review is represented by a blocked promotion status and an audit explanation. A
+  reviewer approval workflow is not implemented.
+- Written explanations use deterministic templates. There is no runtime LLM dependency.
 
 ## What I would add with more time
 

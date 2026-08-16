@@ -213,5 +213,5 @@ def test_fully_received_delivery_confirms_the_original_assumption() -> None:
 
 
 def test_policy_dispatches_at_the_boundary_and_backorders_below_it() -> None:
-    assert evaluate_fulfilment(3, 3).action is DecisionAction.DISPATCH
-    assert evaluate_fulfilment(2, 3).action is DecisionAction.BACKORDER
+    assert evaluate_fulfilment(3, 3) is DecisionAction.DISPATCH
+    assert evaluate_fulfilment(2, 3) is DecisionAction.BACKORDER

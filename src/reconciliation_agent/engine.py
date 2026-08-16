@@ -219,11 +219,11 @@ class SimulationEngine:
         sku = order.payload.sku
         base, expected_inbound, projected = self.availability_at(sku, event.occurred_at)
         eligible_deliveries = self._eligible_deliveries(sku, event.occurred_at)
-        policy = evaluate_fulfilment(projected, order.payload.quantity)
+        policy_action = evaluate_fulfilment(projected, order.payload.quantity)
         action = (
             event.payload.action
             if self.branch is DecisionBranch.ORIGINAL
-            else policy.action
+            else policy_action
         )
         assumption_event_ids = tuple(
             delivery.event_id for delivery in eligible_deliveries
@@ -231,7 +231,7 @@ class SimulationEngine:
         evidence_ids = tuple(
             dict.fromkeys([*self.evidence_ids_by_sku[sku], order.event_id])
         )
-        policy_consistent = action is policy.action
+        policy_consistent = action is policy_action
         explanation = self._decision_explanation(
             event=event,
             order=order,
@@ -240,7 +240,7 @@ class SimulationEngine:
             projected=projected,
             eligible_deliveries=eligible_deliveries,
             action=action,
-            policy_action=policy.action,
+            policy_action=policy_action,
         )
 
         trace = DecisionTrace(
@@ -257,7 +257,7 @@ class SimulationEngine:
             expected_inbound=expected_inbound,
             decision_available_to_promise=projected,
             action=action,
-            policy_action=policy.action,
+            policy_action=policy_action,
             policy_version=event.payload.policy_version,
             policy_consistent=policy_consistent,
             evidence_ids=evidence_ids,
