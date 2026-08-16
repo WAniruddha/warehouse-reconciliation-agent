@@ -267,3 +267,9 @@ tests/                 Contract and end-to-end tests
 - pluggable policy versions and configurable unit conversion;
 - optional schema-constrained LLM narration with deterministic text as the fallback;
 - signed report hashes and richer reviewer approval history.
+
+## Development note
+
+AI tools helped with implementation and testing, while the runtime decision logic remains
+deterministic and independently validated against the committed golden outcomes and
+automated test suite.
